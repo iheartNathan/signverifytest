@@ -59,10 +59,18 @@ jobs:
             notation cert generate-test test-env.io --default
             notation cert show --type ca --store test-env.io test-env.io.crt
 
-            
+
       - name: Sign OCI image layout
         run: |
           export NOTATION_EXPERIMENTAL=1
           notation sign --oci-layout hello-world:${{ steps.meta.outputs.version }}
           notation list --oci-layout hello-world:${{ steps.meta.outputs.version }}
-
+      
+      
+      - name: Create a Trust Policy
+        run: |
+          notation policy import trustpolicy.json
+      
+      - name: Verify image as an OCI Image Layout
+        run: |
+          notation verify --oci-layout hello-world:${{ steps.meta.outputs.version }}
