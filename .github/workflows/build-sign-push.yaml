@@ -31,15 +31,15 @@ jobs:
         with:
           context: .
           file: Dockerfile
-          outputs: type=oci,dest=hello-world.tar
+          outputs: type=oci,dest=net-monitor.tar
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Extract OCI image layout
         run: |
-          mkdir hello-world
-          tar -xf hello-world.tar -C hello-world
-          ls -lha hello-world
+          mkdir net-monitor
+          tar -xf net-monitor.tar -C net-monitor
+          ls -lha net-monitor
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
@@ -63,15 +63,23 @@ jobs:
       - name: Sign OCI image layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation sign --oci-layout hello-world:${{ steps.meta.outputs.version }}
-          notation list --oci-layout hello-world:${{ steps.meta.outputs.version }}
+          notation sign --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }}
+          notation list --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }}
       
       
       - name: Create a Trust Policy
         run: |
           notation policy import trustpolicy.json
+
+      - name: Install Notation CLI
+        uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d
+      
+      - name: Push the OCI Image Layout to GHCR using oras
+        run: |
+          oras cp --from-oci-layout -r ${{ vars.REPO }}:${{ steps.meta.outputs.version }}  ${{ steps.meta.outputs.tags }}
+          
       
       - name: Verify image as an OCI Image Layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation verify --oci-layout hello-world:${{ steps.meta.outputs.version }} --scope ${{ env.REGISTRY }}/${{ github.actor }}/${{ vars.REPO }}
+          notation verify --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }} --scope ${{ env.REGISTRY }}/${{ github.actor }}/${{ vars.REPO }}
