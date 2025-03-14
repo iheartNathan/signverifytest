@@ -73,6 +73,7 @@ jobs:
       - name: Create a Trust Policy
         run: |
           notation policy import trustpolicy.json
+          notation policy show
 
       - name: Install ORAS CLI
         uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d
