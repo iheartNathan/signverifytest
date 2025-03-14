@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir hello-world
           tar -xf hello-world.tar -C hello-world
-          ls -lha
+          ls -lha hello-world
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
@@ -57,8 +57,9 @@ jobs:
       - name: Generate Self-Signed Certificate
         run: |
             notation cert generate-test test-env.io --default
+            notation cert show --type ca --store test-env.io test-env.io.crt
 
-
+            
       - name: Sign OCI image layout
         run: |
           export NOTATION_EXPERIMENTAL=1

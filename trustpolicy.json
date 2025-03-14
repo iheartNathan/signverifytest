@@ -1,0 +1,16 @@
+{
+    "version": "1.0",
+    "trustPolicies": [
+        {
+            "name": "test-env-images",
+            "registryScopes": [ "ghrc.io/iheartnathan/net-monitor" ],
+            "signatureVerification": {
+                "level" : "strict" 
+            },
+            "trustStores": [ "ca:test-env.io" ],
+            "trustedIdentities": [
+                "CN=test-env.io,O=Notary,L=Seattle,ST=WA,C=US"
+            ]
+        }
+    ]
+}
