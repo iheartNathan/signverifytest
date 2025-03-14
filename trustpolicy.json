@@ -9,7 +9,7 @@
             },
             "trustStores": [ "ca:test-env.io" ],
             "trustedIdentities": [
-                "CN=test-env.io,O=Notary,L=Seattle,ST=WA,C=US"
+                "x509.subject: CN=test-env.io,O=Notary,L=Seattle,ST=WA,C=US"
             ]
         }
     ]
