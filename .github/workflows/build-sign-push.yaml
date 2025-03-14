@@ -39,6 +39,7 @@ jobs:
         run: |
           mkdir hello-world
           tar -xf hello-world.tar -C hello-world
+          ls -lha
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
@@ -62,3 +63,5 @@ jobs:
         run: |
           export NOTATION_EXPERIMENTAL=1
           notation sign --oci-layout hello-world:${{ steps.meta.outputs.version }}
+          notation list --oci-layout hello-world:${{ steps.meta.outputs.version }}
+
