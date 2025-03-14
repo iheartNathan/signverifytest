@@ -61,4 +61,4 @@ jobs:
       - name: Sign OCI image layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation sign --oci-layout ${{ steps.meta.outputs.tags }}
+          notation sign --oci-layout hello-world:${{ steps.meta.outputs.version }}
