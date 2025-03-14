@@ -74,10 +74,10 @@ jobs:
         run: |
           notation policy import trustpolicy.json
 
-      - name: Install Notation CLI
+      - name: Install ORAS CLI
         uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d
       
-      - name: Push the OCI Image Layout to GHCR using oras
+      - name: Push the OCI Image Layout to GHCR using ORAS
         run: |
           oras discover ${{ steps.meta.outputs.tags }}
           oras cp --from-oci-layout -r ${{ vars.REPO }}:${{ steps.meta.outputs.version }}  ${{ steps.meta.outputs.tags }}
