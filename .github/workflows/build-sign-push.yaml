@@ -65,6 +65,7 @@ jobs:
       - name: Sign OCI image layout
         run: |
           export NOTATION_EXPERIMENTAL=1
+          notation list --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }}
           notation sign --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }}
           notation list --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }}
       
@@ -78,7 +79,9 @@ jobs:
       
       - name: Push the OCI Image Layout to GHCR using oras
         run: |
+          oras discover ${{ steps.meta.outputs.tags }}
           oras cp --from-oci-layout -r ${{ vars.REPO }}:${{ steps.meta.outputs.version }}  ${{ steps.meta.outputs.tags }}
+          oras discover ${{ steps.meta.outputs.tags }}
           
       
       - name: Verify image as an OCI Image Layout
