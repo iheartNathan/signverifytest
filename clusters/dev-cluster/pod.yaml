@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
     - name: net-monitor
-      image: net-monitor@sha256:773cf0b1fdd434a8ec3ed80d56e054a8d67b0a7ae909d6b501110c4f9e17e11f
+      image: ghcr.io/iheartnathan/net-monitor@sha256:773cf0b1fdd434a8ec3ed80d56e054a8d67b0a7ae909d6b501110c4f9e17e11f
       imagePullPolicy: IfNotPresent
       resources:
         requests:
