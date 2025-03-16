@@ -8,6 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  ENV: net-monitor
 
 
 jobs:
@@ -23,7 +24,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7 # v5.7.0
         with:
-          images: ${{ env.REGISTRY }}/${{ github.actor }}/${{ vars.REPO }}
+          images: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.REPO }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
@@ -65,9 +66,9 @@ jobs:
       - name: Sign OCI image layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation list --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }}
-          notation sign --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }}
-          notation list --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }}
+          notation list --oci-layout ${{ env.REPO }}:${{ steps.meta.outputs.tags }}
+          notation sign --oci-layout ${{ env.REPO }}:${{ steps.meta.outputs.tags }}
+          notation list --oci-layout ${{ env.REPO }}:${{ steps.meta.outputs.tags }}
       
       
       - name: Create a Trust Policy
@@ -81,11 +82,11 @@ jobs:
       - name: Push the OCI Image Layout to GHCR using ORAS
         run: |
           oras discover ${{ steps.meta.outputs.tags }}
-          oras cp --from-oci-layout -r ${{ vars.REPO }}:${{ steps.meta.outputs.version }}  ${{ steps.meta.outputs.tags }}
+          oras cp --from-oci-layout -r ${{ env.REPO }}:${{ steps.meta.outputs.version }}  ${{ steps.meta.outputs.tags }}
           oras discover ${{ steps.meta.outputs.tags }}
           
       
       - name: Verify image as an OCI Image Layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation verify --oci-layout ${{ vars.REPO }}:${{ steps.meta.outputs.version }} --scope ${{ env.REGISTRY }}/${{ github.actor }}/${{ vars.REPO }}
+          notation verify --oci-layout ${{ env.REPO }}:${{ steps.meta.outputs.version }} --scope ${{ env.REGISTRY }}/iheartnathan/${{ env.REPO }}
