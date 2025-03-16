@@ -16,7 +16,8 @@ spec:
       verifyImages:
       - type: Notary
         imageReferences:
-        - "ghcr.io/iheartnathan/net-monitor*"
+        //- "ghcr.io/iheartnathan/net-monitor*"
+        - "*"
         failureAction: Enforce
         attestors:
         - count: 1
