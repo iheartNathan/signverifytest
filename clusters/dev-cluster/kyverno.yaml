@@ -10,6 +10,6 @@ spec:
   chart:
     spec:
       chart: oci://ghcr.io/kyverno/charts/kyverno
-      version: "sha256-5ad23b9f0540fdecbeb37e006f2b8baf524fd7b8ff30d65f88654b0faf57365f"  # Replace with the actual digest
+      version: "sha256:5ad23b9f0540fdecbeb37e006f2b8baf524fd7b8ff30d65f88654b0faf57365f"  # Use SHA256 format correctly
   install:
     createNamespace: true
