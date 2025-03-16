@@ -20,9 +20,23 @@ spec:
   chart:
     spec:
       chart: kyverno  # Chart name inside the OCI registry
-      version: "latest"  # Replace with actual SHA
+      version: "3.3.7"  # Replace with actual SHA
       sourceRef:
         kind: HelmRepository
         name: kyverno
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  test:
+    enable: true
+  driftDetection:
+    mode: enabled
+    ignore:
+    - paths: ["/spec/replicas"]
+      target:
+        kind: Deployment
   install:
     createNamespace: true
