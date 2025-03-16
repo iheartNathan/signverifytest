@@ -89,4 +89,4 @@ jobs:
       - name: Verify image as an OCI Image Layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation verify --oci-layout ${{ steps.meta.outputs.tags }}
+          notation verify ${{ steps.meta.outputs.tags }} -v
