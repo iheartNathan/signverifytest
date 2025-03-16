@@ -89,4 +89,4 @@ jobs:
       - name: Verify image as an OCI Image Layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation verify --oci-layout ${{ steps.meta.outputs.tags }} --scope ${{ env.REGISTRY }}/iheartnathan/${{ env.REPO }}
+          notation verify --oci-layout ${{ steps.meta.outputs.tags }}
