@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: net-monitor
-  namespace: default  # Change if needed
+  namespace: default
 spec:
   containers:
     - name: net-monitor
@@ -15,4 +15,4 @@ spec:
           cpu: "500m"
           memory: "256Mi"
       ports:
-        - containerPort: 80  # Change if the container exposes a different port
+        - containerPort: 80
