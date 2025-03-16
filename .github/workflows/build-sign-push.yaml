@@ -66,9 +66,9 @@ jobs:
       - name: Sign OCI image layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation list --oci-layout ${{ steps.meta.outputs.tags }}
-          notation sign --oci-layout ${{ steps.meta.outputs.tags }}
-          notation list --oci-layout ${{ steps.meta.outputs.tags }}
+          notation list --oci-layout net-monitor:main
+          notation sign --oci-layout net-monitor:main
+          notation list --oci-layout net-monitor:main
       
       
       - name: Create a Trust Policy
@@ -82,11 +82,11 @@ jobs:
       - name: Push the OCI Image Layout to GHCR using ORAS
         run: |
           oras discover ${{ steps.meta.outputs.tags }}
-          oras cp --from-oci-layout -r ${{ env.REPO }}:${{ steps.meta.outputs.version }}  ${{ steps.meta.outputs.tags }}
+          oras cp --from-oci-layout -r net-monitor:main  ${{ steps.meta.outputs.tags }}
           oras discover ${{ steps.meta.outputs.tags }}
           
       
       - name: Verify image as an OCI Image Layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation verify --oci-layout ${{ env.REPO }}:${{ steps.meta.outputs.version }} --scope ${{ env.REGISTRY }}/iheartnathan/${{ env.REPO }}
+          notation verify --oci-layout ${{ steps.meta.outputs.tags }} --scope ${{ env.REGISTRY }}/iheartnathan/${{ env.REPO }}
