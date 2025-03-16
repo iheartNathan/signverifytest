@@ -60,9 +60,14 @@ jobs:
       - name: Generate Self-Signed Certificate
         run: |
             notation cert generate-test test-env.io --default
+            cp /home/runner/.config/notation/localkeys/test-env.io.crt .
             notation cert show --type ca --store test-env.io test-env.io.crt
-            notation key ls
-
+      
+      - name: Upload Public Certificate as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-env-public-cert
+          path: test-env.io.crt
 
       - name: Sign OCI image layout
         run: |
