@@ -20,13 +20,14 @@ spec:
   chart:
     spec:
       chart: kyverno  # Chart name inside the OCI registry
-      version: "3.3.7"  # Replace with actual SHA
+      version: "3.3.7" 
       sourceRef:
         kind: HelmRepository
         name: kyverno
   install:
     remediation:
       retries: 3
+    createNamespace: true
   upgrade:
     remediation:
       retries: 3
@@ -38,5 +39,3 @@ spec:
     - paths: ["/spec/replicas"]
       target:
         kind: Deployment
-  install:
-    createNamespace: true
