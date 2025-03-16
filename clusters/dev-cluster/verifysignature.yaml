@@ -1,0 +1,46 @@
+apiVersion: kyverno.io/v2beta1
+kind: ClusterPolicy
+metadata:
+  name: check-image-notary
+spec:
+  webhookConfiguration:
+    failurePolicy: Fail
+    timeoutSeconds: 30
+  rules:
+    - name: verify-signature-notary
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      verifyImages:
+      - type: Notary
+        imageReferences:
+        - "ghcr.io/iheartnathan/net-monitor*"
+        failureAction: Enforce
+        attestors:
+        - count: 1
+          entries:
+          - certificates:
+              cert: |-
+                    -----BEGIN CERTIFICATE-----
+                    MIIDSDCCAjCgAwIBAgIBfzANBgkqhkiG9w0BAQsFADBTMQswCQYDVQQGEwJVUzEL
+                    MAkGA1UECBMCV0ExEDAOBgNVBAcTB1NlYXR0bGUxDzANBgNVBAoTBk5vdGFyeTEU
+                    MBIGA1UEAxMLdGVzdC1lbnYuaW8wHhcNMjUwMzE2MjIwMDAyWhcNMjUwMzE3MjIw
+                    MDAyWjBTMQswCQYDVQQGEwJVUzELMAkGA1UECBMCV0ExEDAOBgNVBAcTB1NlYXR0
+                    bGUxDzANBgNVBAoTBk5vdGFyeTEUMBIGA1UEAxMLdGVzdC1lbnYuaW8wggEiMA0G
+                    CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCgwMT+8+Bv7iTIw82/DMry5NBaIEhZ
+                    DHPHJYF5JlTHXmpCW2vKNloWLkA2RphTNKF/Tnbv/I4dfGPFzXCvTAhEVr71U3xV
+                    2J1uzd0wkLmA1mhHGitliVuS3cfIhVOeCLjYIrjFAcKC4IgBb/qrakM4fiCbRJG7
+                    C/aLu9CVtwb1spCkbpyPrmbGbC0sne27wc1DdLEQMNm12XHyZDwrkDT0+/JuiwC9
+                    V3aG4wuDYqCRBWX7Pewv21OX6SzdRy6JHtJyqUckXi2AQYGDJvyP5O9YfMDI6mKv
+                    hxp+tiywl6ZqWw8YvfqguPYbC2i6WWGb14OzjaH/SJ80olw8gywuGUU9AgMBAAGj
+                    JzAlMA4GA1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDAzANBgkqhkiG
+                    9w0BAQsFAAOCAQEAAmWKSmMsAkNgm3YEUl1H2vB937oF+8aKdKRzzSOC3KO4Gv+h
+                    WQPGkLRl1Jb0G/ujEZRMfTwdBfAim+POfzjQspPHaj1wsGDkS4KDpEPdJTJkhGRG
+                    6z5aV+CoH4MNqa+pOu1c3vjuMzwUJ2uv3GsnWpwv51Db0VYE/vQq17+xhJktnj3t
+                    gEOIpBh/BhqXzVgz8cj9evA8NppHnoHxpe7DyDJ2bem9s0KF6NkrxQinSTOi753t
+                    A3sRuu6kCFxx2aFcMF7cxb8Z1MxNn/TTsFsoYoV6+wF+YI8MjnkaeFT93SsV5Zmf
+                    uCUSxAmIBZygE12U8H2IISADRqoYDPnXE97QIg==
+                    -----END CERTIFICATE-----
+    
