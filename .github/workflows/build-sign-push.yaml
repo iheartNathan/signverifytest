@@ -66,9 +66,9 @@ jobs:
       - name: Sign OCI image layout
         run: |
           export NOTATION_EXPERIMENTAL=1
-          notation list --oci-layout ${{ env.REPO }}:${{ steps.meta.outputs.tags }}
-          notation sign --oci-layout ${{ env.REPO }}:${{ steps.meta.outputs.tags }}
-          notation list --oci-layout ${{ env.REPO }}:${{ steps.meta.outputs.tags }}
+          notation list --oci-layout ${{ steps.meta.outputs.tags }}
+          notation sign --oci-layout ${{ steps.meta.outputs.tags }}
+          notation list --oci-layout ${{ steps.meta.outputs.tags }}
       
       
       - name: Create a Trust Policy
