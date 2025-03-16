@@ -6,8 +6,7 @@ metadata:
 spec:
   containers:
     - name: net-monitor
-      image: ghcr.io/iheartnathan/net-monitor@sha256:773cf0b1fdd434a8ec3ed80d56e054a8d67b0a7ae909d6b501110c4f9e17e11f
-      imagePullPolicy: IfNotPresent
+      image: ghcr.io/iheartnathan/net-monitor:sha256@02bb618f44c7f8b319c633074b9986870fca838985df62f84be7529a2ecf014e
       resources:
         requests:
           cpu: "100m"
