@@ -61,6 +61,7 @@ jobs:
         run: |
             notation cert generate-test test-env.io --default
             notation cert show --type ca --store test-env.io test-env.io.crt
+            notation key ls
 
 
       - name: Sign OCI image layout
