@@ -18,7 +18,7 @@ spec:
       - type: Notary
         imageReferences:
         - "ghcr.io/iheartnathan/net-monitor*"
-        - "dokcer.io/*"
+        - "docker.io/*"
         failureAction: Enforce
         attestors:
         - count: 1
