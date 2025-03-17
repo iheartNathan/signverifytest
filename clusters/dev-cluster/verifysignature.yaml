@@ -1,7 +1,8 @@
 apiVersion: kyverno.io/v2beta1
-kind: ClusterPolicy
+kind: Policy
 metadata:
   name: check-image-notary
+  namespace: my-namespace
 spec:
   webhookConfiguration:
     failurePolicy: Fail
@@ -17,6 +18,7 @@ spec:
       - type: Notary
         imageReferences:
         - "ghcr.io/iheartnathan/net-monitor*"
+        - "dokcer.io/*"
         failureAction: Enforce
         attestors:
         - count: 1
