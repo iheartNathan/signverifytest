@@ -2,7 +2,7 @@ apiVersion: kyverno.io/v2beta1
 kind: Policy
 metadata:
   name: check-image-notary
-  namespace: my-namespace
+  namespace: default
 spec:
   webhookConfiguration:
     failurePolicy: Fail
