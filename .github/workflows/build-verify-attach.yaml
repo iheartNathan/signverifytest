@@ -66,6 +66,13 @@ jobs:
           input: edinburgh:v1
           format: ${{ matrix.format }}
           output: image-sbom-${{ matrix.format }}.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+            name: ${{ matrix.format }}-sbom
+            path: image-sbom-${{ matrix.format }}.json
+  
       
       # - name: Install Notation CLI
       #   uses: notaryproject/notation-action/setup@b6fee73110795d6793253c673bd723f12bcf9bbb # v1.2.2
