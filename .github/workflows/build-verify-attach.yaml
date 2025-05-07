@@ -36,6 +36,8 @@ jobs:
           file: Dockerfile
           outputs: type=oci,dest=output.tar
           tags: edinburgh:v1
+          platforms: linux/amd64,linux/arm64
+          provenance: false
 
       - name: Extract OCI image layout
         run: |
@@ -43,6 +45,8 @@ jobs:
           tar -xf output.tar -C edinburgh
           ls -lha edinburgh
           ls -lha edinburgh/blobs/sha256
+          cat edinburgh/index.json | jq
+
 
     #   - name: Login to GitHub Container Registry
     #     uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
