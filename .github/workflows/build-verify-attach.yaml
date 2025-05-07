@@ -13,8 +13,8 @@ on:
 
 jobs:
   build-and-scan:
-    permissions:
-      packages: write
+    # permissions:
+    #   packages: write
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +30,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
 
-      - name: Build Docker Image as OCI Layout
+      - name: Build Docker Image as an OCI Archive
         uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         with:
           context: .
@@ -40,14 +40,14 @@ jobs:
           platforms: linux/amd64,linux/arm64
           provenance: false
 
-      - name: Upload OCI image archive
+      - name: Upload OCI Image Archive
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
             name: oci-image-archive
             path: output.tar
         
       
-      - name: Extract OCI image layout
+      - name: Extract OCI Archive to an OCI Image Layout
         run: |
           mkdir edinburgh
           tar -xf output.tar -C edinburgh
@@ -92,7 +92,7 @@ jobs:
         with:
             name: oci-image-archive
         
-      - name: Extract OCI image layout
+      - name: Extract OCI Archive to an OCI Image Layout
         run: |
           mkdir edinburgh
           tar -xf output.tar -C edinburgh
@@ -101,7 +101,7 @@ jobs:
           cat edinburgh/index.json | jq
 
       - name: Generate SBOM using Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2  # v0.28.0
         with:
           input: edinburgh:v1
           format: ${{ matrix.format }}
@@ -118,15 +118,14 @@ jobs:
   attach-sign-and-verify-artifacts:
     needs: [build-and-scan, sbom]
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-    
+    # permissions:
+    #   packages: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Download OCI image archive
+      - name: Download OCI Image Archive
         uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # v4.2.0
         with:
           name: oci-image-archive
@@ -146,7 +145,7 @@ jobs:
         with:
           name: cyclonedx-sbom
 
-      - name: Extract OCI image layout
+      - name: Extract OCI Archive to an OCI Image Layout
         run: |
             mkdir edinburgh
             tar -xf output.tar -C edinburgh
@@ -158,7 +157,7 @@ jobs:
       - name: Install ORAS CLI
         uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d # v1.2.2
 
-      - name: Attach the SBOMs and Vulnerability Scan to the OCI image layout 
+      - name: Attach the SBOMs and Vulnerability Scan to the OCI Image layout 
         run: |
           IMAGE_INDEX_DIGEST=$(jq -r '
             .manifests[]
@@ -234,7 +233,7 @@ jobs:
             notation policy import trustpolicy.json
             notation policy show
 
-      - name: Sign OCI image layout
+      - name: Sign OCI image layout, SBOMs, Vulnerability Scan
         run: |
           export NOTATION_EXPERIMENTAL=1
           notation sign --oci-layout edinburgh@$IMAGE_INDEX_DIGEST --signature-format cose
