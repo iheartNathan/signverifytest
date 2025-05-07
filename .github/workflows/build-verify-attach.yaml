@@ -256,6 +256,6 @@ jobs:
       - name: Log in to GHCR and Push OCI Image Layout to GHCR using ORAS
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | oras login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-          oras cp --from-oci-layout -r --from-distribution-spec v1.1-referrers-api --to-distribution-spec v1.1-referrers-api edinburgh@$IMAGE_INDEX_DIGEST  ${{ env.REGISTRY }}/${{ github.actor }}/edinburgh:v1
-          oras discover ${{ env.REGISTRY }}/${{ github.actor }}/edinburgh:v1
+          oras cp --from-oci-layout -r --from-distribution-spec v1.1-referrers-api --to-distribution-spec v1.1-referrers-api edinburgh@$IMAGE_INDEX_DIGEST  ${{ env.REGISTRY }}/iheartnathan/edinburgh:v1
+          oras discover ${{ env.REGISTRY }}/iheartnathan/edinburgh:v1
 
