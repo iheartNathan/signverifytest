@@ -72,6 +72,20 @@ jobs:
         with:
             name: ${{ matrix.format }}-sbom
             path: image-sbom-${{ matrix.format }}.json
+      
+
+      - name: Run Trivy vulnerability scan (JSON)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          input: edinburgh:v1
+          format: json
+          output: trivy-vulnerability-report.json
+
+      - name: Upload JSON vulnerability report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-vulnerability-report-json
+          path: trivy-vulnerability-report.json
   
       
       # - name: Install Notation CLI
