@@ -79,12 +79,12 @@ jobs:
         with:
           input: edinburgh:v1
           format: json
-          output: trivy-vulnerability-report.json
+          output: trivy-vulnerability-scan.json
 
-      - name: Upload JSON vulnerability report
+      - name: Upload vulnerability scan
         uses: actions/upload-artifact@v4
         with:
-          name: trivy-vulnerability-report-json
+          name: trivy-vulnerability-scan-json
           path: trivy-vulnerability-report.json
   
       
