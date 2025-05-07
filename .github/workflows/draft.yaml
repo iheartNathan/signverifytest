@@ -1,22 +1,25 @@
-name: OCI Image Layout / Supply Chain Artifacts Workflow
+name: OCI Image Layout / Supply Cahin Artifacts Workflow
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
+
 
 jobs:
   build-and-scan:
+    permissions:
+      packages: write
     runs-on: ubuntu-latest
-    outputs:
-      image_tag: echo "edinburgh:v1"
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.10.0
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
 
       - name: Build Docker Image as OCI Layout
-        uses: docker/build-push-action@v6.15.0
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         with:
           context: .
           file: Dockerfile
@@ -25,13 +28,22 @@ jobs:
           platforms: linux/amd64,linux/arm64
           provenance: false
 
+      - name: Upload OCI image archive
+        uses: actions/upload-artifact@v4
+        with:
+            name: oci-image-archive
+            path: output.tar
+        
+      
       - name: Extract OCI image layout
         run: |
           mkdir edinburgh
           tar -xf output.tar -C edinburgh
-          ls -lha edinburgh/blobs/sha256 || true
+          ls -lha edinburgh
+          ls -lha edinburgh/blobs/sha256
           cat edinburgh/index.json | jq
-
+          
+    
       - name: Run Trivy vulnerability scan (JSON)
         uses: aquasecurity/trivy-action@0.28.0
         with:
@@ -44,8 +56,7 @@ jobs:
         with:
           name: trivy-vulnerability-scan-json
           path: trivy-vulnerability-scan.json
-
-
+      
   sbom:
     needs: build-and-scan
     runs-on: ubuntu-latest
@@ -56,6 +67,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
+
+      - name: Download OCI image archive
+        uses: actions/download-artifact@v4
+        with:
+            name: oci-image-archive
+        
+      - name: Extract OCI image layout
+        run: |
+          mkdir edinburgh
+          tar -xf output.tar -C edinburgh
+          ls -lha edinburgh
+          ls -lha edinburgh/blobs/sha256
+          cat edinburgh/index.json | jq
 
       - name: Generate SBOM using Trivy
         uses: aquasecurity/trivy-action@0.28.0

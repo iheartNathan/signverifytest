@@ -113,7 +113,65 @@ jobs:
           name: ${{ matrix.format }}-sbom
           path: image-sbom-${{ matrix.format }}.json
   
+  
+
+  attach-and-sign-rtifacts:
+    needs: [build-and-scan, sbom]
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    
+
+    steps:
+      - name: Download OCI image archive
+        uses: actions/download-artifact@v4
+        with:
+          name: oci-image-archive
       
+      - name: Download Trivy scan
+        uses: actions/download-artifact@v4
+        with:
+          name: trivy-vulnerability-scan-json
+
+      - name: Download SPDX SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: spdx-json-sbom
+
+      - name: Download CycloneDX SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: cyclonedx-sbom
+
+      - name: Extract OCI image layout
+        run: |
+            mkdir edinburgh
+            tar -xf output.tar -C edinburgh
+            ls -lha edinburgh
+            ls -lha edinburgh/blobs/sha256
+            cat edinburgh/index.json | jq
+            ls 
+
+      - name: Install ORAS CLI
+        uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d
+
+      - name: Attach the SBOMs and Vulnerability Scan to the OCI image layout 
+        run: |
+          IMAGE_INDEX_SHA=$(jq -r '
+            .manifests[]
+            | select(.annotations["org.opencontainers.image.ref.name"] == "v1")
+            | .digest
+          ' edinburgh/index.json)
+
+          echo "$IMAGE_INDEX_SHA"
+          oras discover --oci-layout edinburgh@$IMAGE_INDEX_SHA
+
+          oras attach --distribution-spec v1.1-referrers-api \
+            --oci-layout edinburgh@$IMAGE_INDEX_SHA \
+            --artifact-type sbom/cyclonedx \
+            ./image-sbom-cyclonedx.json:application/cyclonedx+json
+          
+          oras discover --oci-layout edinburgh@$IMAGE_INDEX_SHA
       # - name: Install Notation CLI
       #   uses: notaryproject/notation-action/setup@b6fee73110795d6793253c673bd723f12bcf9bbb # v1.2.2
       #   with:
