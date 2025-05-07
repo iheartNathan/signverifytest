@@ -167,17 +167,17 @@ jobs:
           oras discover --oci-layout edinburgh@$IMAGE_INDEX_DIGEST
 
           oras attach --distribution-spec v1.1-referrers-api \
-            --oci-layout edinburgh@$IMAGE_INDEX_SHA \
+            --oci-layout edinburgh@$IMAGE_INDEX_DIGEST \
             --artifact-type sbom/spdx \
             ./image-sbom-spdx-json.json:application/spdx+json
 
           oras attach --distribution-spec v1.1-referrers-api \
-            --oci-layout edinburgh@$IMAGE_INDEX_SHA \
+            --oci-layout edinburgh@$IMAGE_INDEX_DIGEST \
             --artifact-type sbom/cyclonedx \
             ./image-sbom-cyclonedx.json:application/cyclonedx+json
           
           oras attach --distribution-spec v1.1-referrers-api \
-            --oci-layout edinburgh@$IMAGE_INDEX_SHA \
+            --oci-layout edinburgh@$IMAGE_INDEX_DIGEST \
             --artifact-type trivy/scan \
             ./trivy-vulnerability-scan.json:application/vulnerability.scan+json
           
