@@ -205,10 +205,12 @@ jobs:
             | select(.artifactType == "trivy/scan") 
             | .digest
           ' edinburgh/index.json)
+          
 
-          echo "$SPDX_DIGEST"
-          echo "$CYCLONEDX_DIGEST"
-          echo "$TRIVYSCAN_DIGEST"
+          echo "IMAGE_INDEX_DIGEST=$IMAGE_INDEX_DIGEST" >> $GITHUB_ENV
+          echo "SPDX_DIGEST=$SPDX_DIGEST" >> $GITHUB_ENV
+          echo "CYCLONEDX_DIGEST=$CYCLONEDX_DIGEST" >> $GITHUB_ENV
+          echo "TRIVYSCAN_DIGEST=$TRIVYSCAN_DIGEST" >> $GITHUB_ENV
 
 
       - name: Install Notation CLI
