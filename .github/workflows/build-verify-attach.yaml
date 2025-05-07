@@ -182,7 +182,7 @@ jobs:
             ./trivy-vulnerability-scan.json:application/vulnerability.scan+json
           
           
-          oras discover --oci-layout edinburgh@$IMAGE_INDEX_SHA
+          oras discover --oci-layout edinburgh@$IMAGE_INDEX_DIGEST
           cat edinburgh/index.json | jq
           
           SPDX_DIGEST=$(jq -r '
