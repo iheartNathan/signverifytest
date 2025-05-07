@@ -16,10 +16,6 @@ jobs:
     permissions:
       packages: write
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        format: [spdx-json, cyclonedx]
-
 
     steps:
       - name: Checkout code
