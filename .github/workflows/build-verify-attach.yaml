@@ -168,8 +168,19 @@ jobs:
 
           oras attach --distribution-spec v1.1-referrers-api \
             --oci-layout edinburgh@$IMAGE_INDEX_SHA \
+            --artifact-type sbom/spdx \
+            ./image-sbom-spdx.json:application/spdx+json
+
+          oras attach --distribution-spec v1.1-referrers-api \
+            --oci-layout edinburgh@$IMAGE_INDEX_SHA \
             --artifact-type sbom/cyclonedx \
             ./image-sbom-cyclonedx.json:application/cyclonedx+json
+          
+          oras attach --distribution-spec v1.1-referrers-api \
+            --oci-layout edinburgh@$IMAGE_INDEX_SHA \
+            --artifact-type trivy/scan \
+            ./trivy-vulnerability-scan.json:application/vulnerability.scan+json
+          
           
           oras discover --oci-layout edinburgh@$IMAGE_INDEX_SHA
       # - name: Install Notation CLI
