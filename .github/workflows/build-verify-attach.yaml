@@ -157,7 +157,7 @@ jobs:
 
       - name: Attach the SBOMs and Vulnerability Scan to the OCI image layout 
         run: |
-          IMAGE_INDEX_SHA=$(jq -r '
+          IMAGE_INDEX_DIGEST=$(jq -r '
             .manifests[]
             | select(.annotations["org.opencontainers.image.ref.name"] == "v1")
             | .digest
@@ -185,34 +185,60 @@ jobs:
           oras discover --oci-layout edinburgh@$IMAGE_INDEX_SHA
           cat edinburgh/index.json | jq
           
-      # - name: Install Notation CLI
-      #   uses: notaryproject/notation-action/setup@b6fee73110795d6793253c673bd723f12bcf9bbb # v1.2.2
-      #   with:
-      #       version: "1.3.1"    
-      
-      # - name: Generate Self-Signed Certificate
-      #   run: |
-      #       notation cert generate-test test-env.io --default
-      #       notation cert show --type ca --store test-env.io test-env.io.crt
-      
-      # - name: Upload Public Certificate as Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: test-env-public-cert
-      #     path: /home/runner/.config/notation/localkeys/test-env.io.crt
-      
-      # - name: Create a Trust Policy
-      #   run: |
-      #       notation policy import trustpolicy.json
-      #       notation policy show
+          SPDX_DIGEST=$(jq -r '
+            .[] 
+            | select(.artifactType == "sbom/spdx") 
+            | .digest
+          ' edinburgh/index.json)
 
-      # - name: Sign OCI image layout
-      #   run: |
-      #     export NOTATION_EXPERIMENTAL=1
-      #     notation list --oci-layout edinburgh:v1
-      #     notation sign --oci-layout edinburgh:v1
-      #     notation list --oci-layout edinburgh:v1
-      #     notation verify edinburgh:v1 --scope "local/edinburgh" -v
+          CYCLONEDX_DIGEST=$(jq -r '
+            .[] 
+            | select(.artifactType == "sbom/cyclonedx") 
+            | .digest
+          ' edinburgh/index.json)
+
+          TRIVYSCAN_DIGEST=$(jq -r '
+            .[] 
+            | select(.artifactType == "trivy/scan") 
+            | .digest
+          ' edinburgh/index.json)
+
+          echo "$SPDX_DIGEST"
+          echo "$CYCLONEDX_DIGEST"
+          echo "$TRIVYSCAN_DIGEST"
+
+
+      - name: Install Notation CLI
+        uses: notaryproject/notation-action/setup@b6fee73110795d6793253c673bd723f12bcf9bbb # v1.2.2
+        with:
+            version: "1.3.1"    
+      
+      - name: Generate Self-Signed Certificate
+        run: |
+            notation cert generate-test test-env.io --default
+            notation cert show --type ca --store test-env.io test-env.io.crt
+      
+      - name: Upload Public Certificate as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-env-public-cert
+          path: /home/runner/.config/notation/localkeys/test-env.io.crt
+      
+      - name: Create a Trust Policy
+        run: |
+            notation policy import trustpolicy.json
+            notation policy show
+
+      - name: Sign OCI image layout
+        run: |
+          export NOTATION_EXPERIMENTAL=1
+          notation list --oci-layout edinburgh@$IMAGE_INDEX_DIGEST
+          notation sign --oci-layout edinburgh@$IMAGE_INDEX_DIGEST --signature-format cose
+          notation sign --oci-layout edinburgh@$SPDX_DIGEST --signature-format cose
+          notation sign --oci-layout edinburgh@$CYCLONEDX_DIGEST --signature-format cose
+          notation sign --oci-layout edinburgh@$TRIVYSCAN_DIGEST --signature-format cose
+          notation list --oci-layout edinburgh@$IMAGE_INDEX_DIGEST
+
       
 
       # - name: Install ORAS CLI
