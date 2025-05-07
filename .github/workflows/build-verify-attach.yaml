@@ -1,4 +1,4 @@
-name: OCI Image Layout Workflow
+name: OCI Image Layout / Supply Cahin Artifacts Workflow
 
 on:
   # push:
