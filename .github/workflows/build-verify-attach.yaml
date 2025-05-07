@@ -3,9 +3,9 @@ name: OCI Image Layout / Supply Chain Artifacts Workflow
 on:
   workflow_dispatch: 
 
-# env:
-#   REGISTRY: ghcr.io
-#   REPO: edinburgh
+env:
+  REGISTRY: ghcr.io
+
 
 
 jobs:
@@ -115,8 +115,8 @@ jobs:
   attach-sign-and-verify-artifacts:
     needs: [build-and-scan, sbom]
     runs-on: ubuntu-latest
-    # permissions:
-    #   packages: write
+    permissions:
+      packages: write
 
     steps:
       - name: Checkout code
@@ -253,19 +253,9 @@ jobs:
       
       
       
-
-      # - name: Install ORAS CLI
-      #   uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d
-      
-      # # - name: Push the OCI Image Layout to GHCR using ORAS
-      # #   run: |
-      # #     oras discover ${{ steps.meta.outputs.tags }}
-      # #     oras cp --from-oci-layout -r net-monitor:main  ${{ steps.meta.outputs.tags }}
-      # #     oras discover ${{ steps.meta.outputs.tags }}
-          
-      
-      # # - name: Verify image as an OCI Image Layout
-      # #   run: |
-      # #     export NOTATION_EXPERIMENTAL=1
-      # #     notation verify ${{ steps.meta.outputs.tags }} -v
+      - name: Log in to GHCR and Push OCI Image Layout to GHCR using ORAS
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | oras login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+          oras cp --from-oci-layout -r --from-distribution-spec v1.1-referrers-api --to-distribution-spec v1.1-referrers-api edinburgh@$IMAGE_INDEX_DIGEST  ${{ env.REGISTRY }}/${{ github.actor }}/edinburgh:v1
+          oras discover ${{ env.REGISTRY }}/${{ github.actor }}/edinburgh:v1
 
