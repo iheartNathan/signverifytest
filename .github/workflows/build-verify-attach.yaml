@@ -183,6 +183,8 @@ jobs:
           
           
           oras discover --oci-layout edinburgh@$IMAGE_INDEX_SHA
+          cat edinburgh/index.json | jq
+          
       # - name: Install Notation CLI
       #   uses: notaryproject/notation-action/setup@b6fee73110795d6793253c673bd723f12bcf9bbb # v1.2.2
       #   with:
