@@ -244,6 +244,7 @@ jobs:
 
       - name: Verify OCI image layout, SBOMs, Vulnerability Scan
         run: |
+          export NOTATION_EXPERIMENTAL=1
           notation verify --oci-layout edinburgh@$IMAGE_INDEX_DIGEST --scope "local/edinburgh"
           notation verify --oci-layout edinburgh@$SPDX_DIGEST --scope "local/edinburgh"
           notation verify --oci-layout edinburgh@$CYCLONEDX_DIGEST --scope "local/edinburgh"
