@@ -187,13 +187,13 @@ jobs:
 
           SPDX_DIGEST=$(jq -r '
             .manifests[]
-            | select(..artifactType == "sbom/spdx")
+            | select(.artifactType == "sbom/spdx")
             | .digest
           ' edinburgh/index.json)
 
           CYCLONEDX_DIGEST=$(jq -r '
             .manifests[]
-            | select(..artifactType == "sbom/cyclonedx")
+            | select(.artifactType == "sbom/cyclonedx")
             | .digest
           ' edinburgh/index.json)
 
