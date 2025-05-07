@@ -184,21 +184,21 @@ jobs:
           
           oras discover --oci-layout edinburgh@$IMAGE_INDEX_DIGEST
           cat edinburgh/index.json | jq
-          
+
           SPDX_DIGEST=$(jq -r '
-            .[] 
-            | select(.artifactType == "sbom/spdx") 
+            .manifests[]
+            | select(..artifactType == "sbom/spdx")
             | .digest
           ' edinburgh/index.json)
 
           CYCLONEDX_DIGEST=$(jq -r '
-            .[] 
-            | select(.artifactType == "sbom/cyclonedx") 
+            .manifests[]
+            | select(..artifactType == "sbom/cyclonedx")
             | .digest
           ' edinburgh/index.json)
 
           TRIVYSCAN_DIGEST=$(jq -r '
-            .[] 
+            .manifests[]
             | select(.artifactType == "trivy/scan") 
             | .digest
           ' edinburgh/index.json)
