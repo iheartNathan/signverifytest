@@ -41,7 +41,7 @@ jobs:
           provenance: false
 
       - name: Upload OCI image archive
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
             name: oci-image-archive
             path: output.tar
@@ -64,14 +64,14 @@ jobs:
     #       password: ${{ secrets.GITHUB_TOKEN }}
     
       - name: Run Trivy vulnerability scan (JSON)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2  # v0.28.0
         with:
           input: edinburgh:v1
           format: json
           output: trivy-vulnerability-scan.json
 
       - name: Upload vulnerability scan
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
           name: trivy-vulnerability-scan-json
           path: trivy-vulnerability-scan.json
@@ -85,10 +85,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Download OCI image archive
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # v4.2.0
         with:
             name: oci-image-archive
         
@@ -108,7 +108,7 @@ jobs:
           output: image-sbom-${{ matrix.format }}.json
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
           name: ${{ matrix.format }}-sbom
           path: image-sbom-${{ matrix.format }}.json
@@ -127,22 +127,22 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Download OCI image archive
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # v4.2.0
         with:
           name: oci-image-archive
       
       - name: Download Trivy scan
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # v4.2.0
         with:
           name: trivy-vulnerability-scan-json
 
       - name: Download SPDX SBOM
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # v4.2.0
         with:
           name: spdx-json-sbom
 
       - name: Download CycloneDX SBOM
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # v4.2.0
         with:
           name: cyclonedx-sbom
 
@@ -156,7 +156,7 @@ jobs:
             ls 
 
       - name: Install ORAS CLI
-        uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d
+        uses: oras-project/setup-oras@5c0b487ce3fe0ce3ab0d034e63669e426e294e4d # v1.2.2
 
       - name: Attach the SBOMs and Vulnerability Scan to the OCI image layout 
         run: |
@@ -224,7 +224,7 @@ jobs:
             notation cert show --type ca --store test-env.io test-env.io.crt
       
       - name: Upload Public Certificate as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
           name: test-env-public-cert
           path: /home/runner/.config/notation/localkeys/test-env.io.crt
