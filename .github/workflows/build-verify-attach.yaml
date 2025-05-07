@@ -71,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: trivy-vulnerability-scan-json
-          path: trivy-vulnerability-report.json
+          path: trivy-vulnerability-scan.json
       
       - name: Generate SBOM using Trivy
         uses: aquasecurity/trivy-action@0.28.0
