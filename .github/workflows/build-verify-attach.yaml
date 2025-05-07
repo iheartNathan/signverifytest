@@ -79,12 +79,15 @@ jobs:
   sbom:
     needs: build-and-scan
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        format: [spdx-json, cyclonedx]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
 
-      - name: Upload OCI image archive
+      - name: Download OCI image archive
         uses: actions/download-artifact@v4
         with:
             name: oci-image-archive
