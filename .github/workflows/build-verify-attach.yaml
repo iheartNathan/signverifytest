@@ -59,6 +59,19 @@ jobs:
     #       registry: ${{ env.REGISTRY }}
     #       username: ${{ github.actor }}
     #       password: ${{ secrets.GITHUB_TOKEN }}
+    
+      - name: Run Trivy vulnerability scan (JSON)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          input: edinburgh:v1
+          format: json
+          output: trivy-vulnerability-scan.json
+
+      - name: Upload vulnerability scan
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-vulnerability-scan-json
+          path: trivy-vulnerability-report.json
       
       - name: Generate SBOM using Trivy
         uses: aquasecurity/trivy-action@0.28.0
@@ -72,20 +85,6 @@ jobs:
         with:
             name: ${{ matrix.format }}-sbom
             path: image-sbom-${{ matrix.format }}.json
-      
-
-      - name: Run Trivy vulnerability scan (JSON)
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          input: edinburgh:v1
-          format: json
-          output: trivy-vulnerability-scan.json
-
-      - name: Upload vulnerability scan
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-vulnerability-scan-json
-          path: trivy-vulnerability-report.json
   
       
       # - name: Install Notation CLI
