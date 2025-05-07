@@ -255,7 +255,7 @@ jobs:
       
       - name: Log in to GHCR and Push OCI Image Layout to GHCR using ORAS
         run: |
-          echo "${{ secrets.DOCKER_TOKEN }}" | oras login ${{ env.REGISTRY }} -u {{ vars.NAMESPACE }} --password-stdin
+          echo "${{ secrets.DOCKER_TOKEN }}" | oras login ${{ env.REGISTRY }} -u ${{ vars.NAMESPACE }} --password-stdin
           oras cp --from-oci-layout -r edinburgh@$IMAGE_INDEX_DIGEST  ${{ env.REGISTRY }}/${{ vars.NAMESPACE }}/edinburgh:v1
           oras discover ${{ env.REGISTRY }}/${{ vars.NAMESPACE }}/edinburgh:v1
 
