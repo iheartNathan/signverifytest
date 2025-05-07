@@ -1,4 +1,4 @@
-name: OCI Image Layout / Supply Cahin Artifacts Workflow
+name: OCI Image Layout / Supply Chain Artifacts Workflow
 
 on:
   # push:
@@ -115,7 +115,7 @@ jobs:
   
   
 
-  attach-and-sign-rtifacts:
+  attach-sign-and-verify-artifacts:
     needs: [build-and-scan, sbom]
     runs-on: ubuntu-latest
     permissions:
@@ -163,8 +163,8 @@ jobs:
             | .digest
           ' edinburgh/index.json)
 
-          echo "$IMAGE_INDEX_SHA"
-          oras discover --oci-layout edinburgh@$IMAGE_INDEX_SHA
+          echo "$IMAGE_INDEX_DIGEST"
+          oras discover --oci-layout edinburgh@$IMAGE_INDEX_DIGEST
 
           oras attach --distribution-spec v1.1-referrers-api \
             --oci-layout edinburgh@$IMAGE_INDEX_SHA \
