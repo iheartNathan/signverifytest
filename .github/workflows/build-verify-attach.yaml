@@ -57,7 +57,7 @@ jobs:
           name: trivy-vulnerability-scan-json
           path: trivy-vulnerability-scan.json
       
-  sbom:
+  generate-sbom:
     needs: build-and-scan
     runs-on: ubuntu-latest
     strategy:
@@ -97,7 +97,7 @@ jobs:
   
 
   attach-sign-and-verify-artifacts:
-    needs: [build-and-scan, sbom]
+    needs: [build-and-scan, generate-sbom]
     runs-on: ubuntu-latest
     # permissions:
     #   packages: write
